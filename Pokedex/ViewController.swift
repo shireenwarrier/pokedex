@@ -11,14 +11,18 @@ import UIKit
 class ViewController: UIViewController {
     var tableView: UITableView!
     var collectionView: UICollectionView!
-    var pokeArray: [Pokemon]! = PokemonGenerator.getPokemonArray()
+    let pokeArray: [Pokemon]! = PokemonGenerator.getPokemonArray()
     var segControl: UISegmentedControl!
+    var searchController = UISearchController(searchResultsController: nil)
+    var filteredPokemon = [Pokemon]()
+    var pokemonToPass: Pokemon!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTableView()
         setupCollectionView()
         setUpSegControl()
+        setupSearchController()
         collectionView.isHidden = true
         // Do any additional setup after loading the view, typically from a nib.
     }
@@ -67,6 +71,13 @@ class ViewController: UIViewController {
         view.addSubview(segControl)
     }
     
+    func setupSearchController(){
+        searchController.searchResultsUpdater = self
+        searchController.dimsBackgroundDuringPresentation = false
+        definesPresentationContext = true
+        tableView.tableHeaderView = searchController.searchBar
+    }
+    
     func changeViews(sender: UISegmentedControl){
         switch sender.selectedSegmentIndex {
         case 0:
@@ -79,11 +90,29 @@ class ViewController: UIViewController {
             tableView.isHidden = false
         }
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "segueToProfile" {
+            let profileVC = segue.destination as! ProfileViewController
+            profileVC.pokemon = pokemonToPass
+        }
+    }
+
+    func filterContentForSearchText(searchText: String, scope: String = "All") {
+        filteredPokemon = pokeArray.filter {
+            pokemon in return (pokemon.name.lowercased().range(of: searchText.lowercased()) != nil)
+        }
+        
+        tableView.reloadData()
+    }
 }
 
 extension ViewController: UITableViewDataSource, UITableViewDelegate{
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if searchController.isActive && searchController.searchBar.text != "" {
+            return filteredPokemon.count
+        }
         return pokeArray.count
     }
     
@@ -95,7 +124,13 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate{
         }
         
         cell.awakeFromNib()
-        if let url = NSURL(string: pokeArray[indexPath.row].imageUrl) {
+        var poke: Pokemon
+        if (searchController.isActive && searchController.searchBar.text != "") {
+            poke = filteredPokemon[indexPath.row]
+        } else {
+            poke = pokeArray[indexPath.row]
+        }
+        if let url = NSURL(string: poke.imageUrl) {
             if let data = NSData(contentsOf: url as URL) {
                 cell.pokeImage.contentMode = .scaleAspectFit
                 cell.pokeImage.image = UIImage(data: data as Data)
@@ -108,15 +143,19 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate{
             cell.pokeImage.contentMode = .scaleAspectFit
             cell.pokeImage.image = #imageLiteral(resourceName: "missing_pokemon")
         }
-        cell.numberLabel.text = String(pokeArray[indexPath.row].number)
-        cell.nameLabel.text = pokeArray[indexPath.row].name
+        cell.numberLabel.text = String(poke.number)
+        cell.nameLabel.text = poke.name
         return cell
     }
     
-//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        pokemonToPass = pokeArray[indexPath.row]
-//        performSegue(withIdentifier: "segueToFruitVS", sender: self)
-//    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if (searchController.isActive && searchController.searchBar.text != "") {
+            pokemonToPass = filteredPokemon[indexPath.row]
+        } else {
+            pokemonToPass = pokeArray[indexPath.row]
+        }
+        performSegue(withIdentifier: "segueToProfile", sender: self)
+    }
     
 }
 
@@ -164,4 +203,10 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource, 
         return CGSize(width: view.frame.width, height: view.frame.width)
     }
     
+}
+
+extension ViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        filterContentForSearchText(searchText: searchController.searchBar.text!)
+    }
 }

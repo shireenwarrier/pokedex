@@ -19,6 +19,7 @@
 		3CFC6F411D9871FC00B4EBB5 /* PokemonGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CFC6F401D9871FC00B4EBB5 /* PokemonGenerator.swift */; };
 		51237CC91E551DC0006B5413 /* PokemonTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51237CC81E551DC0006B5413 /* PokemonTableCell.swift */; };
 		51237CCB1E553B4F006B5413 /* PokemonGridCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51237CCA1E553B4F006B5413 /* PokemonGridCell.swift */; };
+		51237CCD1E5552DA006B5413 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51237CCC1E5552DA006B5413 /* ProfileViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +58,7 @@
 		3CFC6F401D9871FC00B4EBB5 /* PokemonGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PokemonGenerator.swift; sourceTree = "<group>"; };
 		51237CC81E551DC0006B5413 /* PokemonTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PokemonTableCell.swift; path = ../PokemonTableCell.swift; sourceTree = "<group>"; };
 		51237CCA1E553B4F006B5413 /* PokemonGridCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PokemonGridCell.swift; sourceTree = "<group>"; };
+		51237CCC1E5552DA006B5413 /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,6 +112,7 @@
 				3CFC6F3C1D98719100B4EBB5 /* pokeData.json */,
 				3CFC6F0E1D98716000B4EBB5 /* AppDelegate.swift */,
 				3CFC6F101D98716000B4EBB5 /* ViewController.swift */,
+				51237CCC1E5552DA006B5413 /* ProfileViewController.swift */,
 				3CFC6F121D98716000B4EBB5 /* Main.storyboard */,
 				3CFC6F151D98716000B4EBB5 /* Assets.xcassets */,
 				3CFC6F171D98716000B4EBB5 /* LaunchScreen.storyboard */,
@@ -279,6 +282,7 @@
 				3CFC6F111D98716000B4EBB5 /* ViewController.swift in Sources */,
 				3CFC6F411D9871FC00B4EBB5 /* PokemonGenerator.swift in Sources */,
 				3CFC6F0F1D98716000B4EBB5 /* AppDelegate.swift in Sources */,
+				51237CCD1E5552DA006B5413 /* ProfileViewController.swift in Sources */,
 				3CFC6F3F1D9871F100B4EBB5 /* Pokemon.swift in Sources */,
 				51237CCB1E553B4F006B5413 /* PokemonGridCell.swift in Sources */,
 			);
