@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  SearchViewController.swift
 //  Pokedex
 //
 //  Created by SAMEER SURESH on 9/25/16.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class SearchViewController: UIViewController {
     var tableView: UITableView!
     var collectionView: UICollectionView!
     let pokeArray: [Pokemon]! = PokemonGenerator.getPokemonArray()
@@ -66,9 +66,8 @@ class ViewController: UIViewController {
         segControl = UISegmentedControl(items: views)
         segControl.selectedSegmentIndex = 0
         segControl.frame = CGRect(x: view.frame.maxX - 150, y: 10, width: 100, height: 30)
-        segControl.backgroundColor = UIColor.black
-        segControl.addTarget(self, action: #selector(ViewController.changeViews), for: .valueChanged)
-        view.addSubview(segControl)
+        segControl.addTarget(self, action: #selector(SearchViewController.changeViews), for: .valueChanged)
+        navigationItem.titleView = segControl
     }
     
     func setupSearchController(){
@@ -107,7 +106,7 @@ class ViewController: UIViewController {
     }
 }
 
-extension ViewController: UITableViewDataSource, UITableViewDelegate{
+extension SearchViewController: UITableViewDataSource, UITableViewDelegate{
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if searchController.isActive && searchController.searchBar.text != "" {
@@ -154,12 +153,13 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate{
         } else {
             pokemonToPass = pokeArray[indexPath.row]
         }
+        
         performSegue(withIdentifier: "segueToProfile", sender: self)
     }
     
 }
 
-extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
+extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
@@ -203,9 +203,18 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource, 
         return CGSize(width: view.frame.width, height: view.frame.width)
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if (searchController.isActive && searchController.searchBar.text != "") {
+            pokemonToPass = filteredPokemon[indexPath.row]
+        } else {
+            pokemonToPass = pokeArray[indexPath.row]
+        }
+        performSegue(withIdentifier: "segueToProfile", sender: self)
+    }
+    
 }
 
-extension ViewController: UISearchResultsUpdating {
+extension SearchViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         filterContentForSearchText(searchText: searchController.searchBar.text!)
     }
