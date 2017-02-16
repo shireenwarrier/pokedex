@@ -16,8 +16,10 @@ class SearchViewController: UIViewController {
     var searchController = UISearchController(searchResultsController: nil)
     var filteredPokemon = [Pokemon]()
     var pokemonToPass: Pokemon!
+    var i: Int!
 
     override func viewDidLoad() {
+        i = 0
         super.viewDidLoad()
         setupTableView()
         setupCollectionView()
@@ -53,7 +55,7 @@ class SearchViewController: UIViewController {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 0
         layout.minimumInteritemSpacing = 0
-        collectionView = UICollectionView(frame: view.frame, collectionViewLayout: layout)
+        collectionView = UICollectionView(frame: CGRect(x: 0, y: UIApplication.shared.statusBarFrame.maxY, width: view.frame.width, height: view.frame.height), collectionViewLayout: layout)
         collectionView.register(PokemonGridCell.self, forCellWithReuseIdentifier: "pokeCell")
         collectionView.backgroundColor = UIColor.white
         collectionView.delegate = self
@@ -66,7 +68,7 @@ class SearchViewController: UIViewController {
         segControl = UISegmentedControl(items: views)
         segControl.selectedSegmentIndex = 0
         segControl.frame = CGRect(x: view.frame.maxX - 150, y: 10, width: 100, height: 30)
-        segControl.addTarget(self, action: #selector(SearchViewController.changeViews), for: .valueChanged)
+        segControl.addTarget(self, action: #selector(SearchViewController.changeSegViews), for: .valueChanged)
         navigationItem.titleView = segControl
     }
     
@@ -75,12 +77,13 @@ class SearchViewController: UIViewController {
         searchController.dimsBackgroundDuringPresentation = false
         definesPresentationContext = true
         tableView.tableHeaderView = searchController.searchBar
-        //collectionView.
+//        collectionView.register(searchController, forSupplementaryViewOfKind: searchController, withReuseIdentifier: "")
+//        collectionView.register(searchController, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "CollectionHeaderView")
         searchController.searchBar.scopeButtonTitles = ["List", "Grid"]
         searchController.searchBar.delegate = self
     }
     
-    func changeViews(sender: UISegmentedControl){
+    func changeSegViews(sender: UISegmentedControl){
         switch sender.selectedSegmentIndex {
         case 0:
             tableView.isHidden = false
@@ -93,18 +96,18 @@ class SearchViewController: UIViewController {
         }
     }
     
-//    func changeViews(scope: String){
-//        switch scope {
-//        case "List":
-//            tableView.isHidden = false
-//            collectionView.isHidden = true
-//        case "Grid":
-//            tableView.isHidden = true
-//            collectionView.isHidden = false
-//        default:
-//            tableView.isHidden = false
-//        }
-//    }
+    func changeViews(scope: String){
+        switch scope {
+        case "List":
+            tableView.isHidden = false
+            collectionView.isHidden = true
+        case "Grid":
+            tableView.isHidden = true
+            collectionView.isHidden = false
+        default:
+            tableView.isHidden = false
+        }
+    }
 
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -118,10 +121,7 @@ class SearchViewController: UIViewController {
         filteredPokemon = pokeArray.filter {
             pokemon in return (pokemon.name.lowercased().range(of: searchText.lowercased()) != nil)
         }
-//        if scope == "Grid" {
-//            changeViews(scope: "Grid")
-//            
-//        }
+        changeViews(scope: scope)
         
         tableView.reloadData()
     }
@@ -196,7 +196,8 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
+        print(searchController.isActive)
+
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "pokeCell", for: indexPath) as! PokemonGridCell
         
         for subview in cell.contentView.subviews {
@@ -218,8 +219,15 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        var poke: [Pokemon]
+        if (searchController.isActive && searchController.searchBar.text != "") {
+            poke = filteredPokemon
+        } else {
+            poke = pokeArray
+        }
+        
         let pokeCell = cell as! PokemonGridCell
-        if let url = NSURL(string: pokeArray[indexPath.row].imageUrl) {
+        if let url = NSURL(string: poke[indexPath.row].imageUrl) {
             if let data = NSData(contentsOf: url as URL) {
                 pokeCell.pokeImage.contentMode = .scaleAspectFit
                 pokeCell.pokeImage.image = UIImage(data: data as Data)
@@ -247,6 +255,13 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
         performSegue(withIdentifier: "segueToProfile", sender: self)
     }
     
+//    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+//        let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "searchControllerView", for: indexPath)
+//        //headerView = searchController.searchBar.text
+//        
+//        return headerView
+//    }
+    
 }
 
 extension SearchViewController: UISearchResultsUpdating {
@@ -254,6 +269,7 @@ extension SearchViewController: UISearchResultsUpdating {
         let searchBar = searchController.searchBar
         let scope = searchBar.scopeButtonTitles![searchBar.selectedScopeButtonIndex]
         filterContentForSearchText(searchText: searchController.searchBar.text!, scope: scope)
+        collectionView.reloadData()
     }
 }
 
