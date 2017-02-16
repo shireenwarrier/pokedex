@@ -22,10 +22,10 @@ class FavoritesViewController: UIViewController {
     }
     
     func setupUI() {
-        let fruitLabel = UILabel(frame: CGRect(x: 0, y: view.frame.height/2, width: view.frame.width, height: 60))
-        fruitLabel.text = "jezanthapus"
-        fruitLabel.textColor = UIColor.black
-        view.addSubview(fruitLabel)
+        let favoritesLabel = UILabel(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 60))
+        favoritesLabel.text = "My Favorites"
+        favoritesLabel.textColor = UIColor.black
+        view.addSubview(favoritesLabel)
     }
 
 }

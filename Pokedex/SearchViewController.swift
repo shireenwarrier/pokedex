@@ -75,6 +75,9 @@ class SearchViewController: UIViewController {
         searchController.dimsBackgroundDuringPresentation = false
         definesPresentationContext = true
         tableView.tableHeaderView = searchController.searchBar
+        //collectionView.
+        searchController.searchBar.scopeButtonTitles = ["List", "Grid"]
+        searchController.searchBar.delegate = self
     }
     
     func changeViews(sender: UISegmentedControl){
@@ -90,6 +93,20 @@ class SearchViewController: UIViewController {
         }
     }
     
+//    func changeViews(scope: String){
+//        switch scope {
+//        case "List":
+//            tableView.isHidden = false
+//            collectionView.isHidden = true
+//        case "Grid":
+//            tableView.isHidden = true
+//            collectionView.isHidden = false
+//        default:
+//            tableView.isHidden = false
+//        }
+//    }
+
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "segueToProfile" {
             let profileVC = segue.destination as! ProfileViewController
@@ -97,13 +114,18 @@ class SearchViewController: UIViewController {
         }
     }
 
-    func filterContentForSearchText(searchText: String, scope: String = "All") {
+    func filterContentForSearchText(searchText: String, scope: String = "List") {
         filteredPokemon = pokeArray.filter {
             pokemon in return (pokemon.name.lowercased().range(of: searchText.lowercased()) != nil)
         }
+//        if scope == "Grid" {
+//            changeViews(scope: "Grid")
+//            
+//        }
         
         tableView.reloadData()
     }
+
 }
 
 extension SearchViewController: UITableViewDataSource, UITableViewDelegate{
@@ -123,6 +145,7 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate{
         }
         
         cell.awakeFromNib()
+        
         var poke: Pokemon
         if (searchController.isActive && searchController.searchBar.text != "") {
             poke = filteredPokemon[indexPath.row]
@@ -166,10 +189,14 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if searchController.isActive && searchController.searchBar.text != "" {
+            return filteredPokemon.count
+        }
         return pokeArray.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "pokeCell", for: indexPath) as! PokemonGridCell
         
         for subview in cell.contentView.subviews {
@@ -177,7 +204,15 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
         }
         
         cell.awakeFromNib()
-        cell.nameLabel.text = pokeArray[indexPath.row].name
+        
+        var poke: Pokemon
+        if (searchController.isActive && searchController.searchBar.text != "") {
+            poke = filteredPokemon[indexPath.row]
+        } else {
+            poke = pokeArray[indexPath.row]
+        }
+        
+        cell.nameLabel.text = poke.name
         
         return cell
     }
@@ -216,6 +251,14 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
 
 extension SearchViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
-        filterContentForSearchText(searchText: searchController.searchBar.text!)
+        let searchBar = searchController.searchBar
+        let scope = searchBar.scopeButtonTitles![searchBar.selectedScopeButtonIndex]
+        filterContentForSearchText(searchText: searchController.searchBar.text!, scope: scope)
+    }
+}
+
+extension SearchViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
+        filterContentForSearchText(searchText: searchBar.text!, scope: searchBar.scopeButtonTitles![selectedScope])
     }
 }
