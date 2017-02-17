@@ -12,7 +12,6 @@ class SearchViewController: UIViewController {
     var tableView: UITableView!
     var collectionView: UICollectionView!
     let pokeArray: [Pokemon]! = PokemonGenerator.getPokemonArray()
-    var segControl: UISegmentedControl!
     var searchController = UISearchController(searchResultsController: nil)
     var filteredPokemon = [Pokemon]()
     var pokemonToPass: Pokemon!
@@ -21,11 +20,12 @@ class SearchViewController: UIViewController {
     override func viewDidLoad() {
         i = 0
         super.viewDidLoad()
+        filteredPokemon = []
         setupTableView()
         setupCollectionView()
-        setUpSegControl()
         setupSearchController()
         collectionView.isHidden = true
+        self.title = "Search!"
         // Do any additional setup after loading the view, typically from a nib.
     }
 
@@ -63,37 +63,14 @@ class SearchViewController: UIViewController {
         view.addSubview(collectionView)
     }
     
-    func setUpSegControl(){
-        let views = ["List", "Grid"]
-        segControl = UISegmentedControl(items: views)
-        segControl.selectedSegmentIndex = 0
-        segControl.frame = CGRect(x: view.frame.maxX - 150, y: 10, width: 100, height: 30)
-        segControl.addTarget(self, action: #selector(SearchViewController.changeSegViews), for: .valueChanged)
-        navigationItem.titleView = segControl
-    }
-    
     func setupSearchController(){
+        searchController.hidesNavigationBarDuringPresentation = false
         searchController.searchResultsUpdater = self
         searchController.dimsBackgroundDuringPresentation = false
         definesPresentationContext = true
         tableView.tableHeaderView = searchController.searchBar
-//        collectionView.register(searchController, forSupplementaryViewOfKind: searchController, withReuseIdentifier: "")
-//        collectionView.register(searchController, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "CollectionHeaderView")
         searchController.searchBar.scopeButtonTitles = ["List", "Grid"]
         searchController.searchBar.delegate = self
-    }
-    
-    func changeSegViews(sender: UISegmentedControl){
-        switch sender.selectedSegmentIndex {
-        case 0:
-            tableView.isHidden = false
-            collectionView.isHidden = true
-        case 1:
-            tableView.isHidden = true
-            collectionView.isHidden = false
-        default:
-            tableView.isHidden = false
-        }
     }
     
     func changeViews(scope: String){
@@ -118,23 +95,48 @@ class SearchViewController: UIViewController {
     }
 
     func filterContentForSearchText(searchText: String, scope: String = "List") {
-        filteredPokemon = pokeArray.filter {
+        let byName = pokeArray.filter {
             pokemon in return (pokemon.name.lowercased().range(of: searchText.lowercased()) != nil)
         }
+        let byNumber = pokeArray.filter {
+            pokemon in return (String(pokemon.number).range(of: searchText.lowercased()) != nil)
+        }
+        filteredPokemon = arrayUnion(array1: byName, array2: byNumber)
         changeViews(scope: scope)
         
         tableView.reloadData()
     }
-
+    
+    func arrayUnion(array1: [Pokemon], array2: [Pokemon]) ->[Pokemon] {
+        var union: [Pokemon] = []
+        for poke in array1{
+            if !containsMon(mon: poke, arr: array2) {
+                union.append(poke)
+            }
+        }
+        for poke in array2{
+            if !containsMon(mon: poke, arr: array1) {
+                union.append(poke)
+            }
+        }
+        return union
+        
+    }
+    func containsMon(mon: Pokemon, arr: [Pokemon]) ->Bool {
+        let name = mon.name
+        for poke in arr {
+            if name == poke.name {
+                return true
+            }
+        }
+        return false
+    }
 }
 
 extension SearchViewController: UITableViewDataSource, UITableViewDelegate{
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if searchController.isActive && searchController.searchBar.text != "" {
-            return filteredPokemon.count
-        }
-        return pokeArray.count
+        return filteredPokemon.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -145,13 +147,7 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate{
         }
         
         cell.awakeFromNib()
-        
-        var poke: Pokemon
-        if (searchController.isActive && searchController.searchBar.text != "") {
-            poke = filteredPokemon[indexPath.row]
-        } else {
-            poke = pokeArray[indexPath.row]
-        }
+        let poke: Pokemon = filteredPokemon[indexPath.row]
         if let url = NSURL(string: poke.imageUrl) {
             if let data = NSData(contentsOf: url as URL) {
                 cell.pokeImage.contentMode = .scaleAspectFit
@@ -171,12 +167,7 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate{
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if (searchController.isActive && searchController.searchBar.text != "") {
-            pokemonToPass = filteredPokemon[indexPath.row]
-        } else {
-            pokemonToPass = pokeArray[indexPath.row]
-        }
-        
+        pokemonToPass = filteredPokemon[indexPath.row]
         performSegue(withIdentifier: "segueToProfile", sender: self)
     }
     
@@ -189,15 +180,10 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if searchController.isActive && searchController.searchBar.text != "" {
-            return filteredPokemon.count
-        }
-        return pokeArray.count
+        return filteredPokemon.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        print(searchController.isActive)
-
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "pokeCell", for: indexPath) as! PokemonGridCell
         
         for subview in cell.contentView.subviews {
@@ -206,12 +192,7 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
         
         cell.awakeFromNib()
         
-        var poke: Pokemon
-        if (searchController.isActive && searchController.searchBar.text != "") {
-            poke = filteredPokemon[indexPath.row]
-        } else {
-            poke = pokeArray[indexPath.row]
-        }
+        let poke: Pokemon = filteredPokemon[indexPath.row]
         
         cell.nameLabel.text = poke.name
         
@@ -219,12 +200,7 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        var poke: [Pokemon]
-        if (searchController.isActive && searchController.searchBar.text != "") {
-            poke = filteredPokemon
-        } else {
-            poke = pokeArray
-        }
+        var poke: [Pokemon] = filteredPokemon
         
         let pokeCell = cell as! PokemonGridCell
         if let url = NSURL(string: poke[indexPath.row].imageUrl) {
@@ -247,20 +223,9 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if (searchController.isActive && searchController.searchBar.text != "") {
-            pokemonToPass = filteredPokemon[indexPath.row]
-        } else {
-            pokemonToPass = pokeArray[indexPath.row]
-        }
+        pokemonToPass = filteredPokemon[indexPath.row]
         performSegue(withIdentifier: "segueToProfile", sender: self)
     }
-    
-//    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-//        let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "searchControllerView", for: indexPath)
-//        //headerView = searchController.searchBar.text
-//        
-//        return headerView
-//    }
     
 }
 
@@ -277,4 +242,5 @@ extension SearchViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
         filterContentForSearchText(searchText: searchBar.text!, scope: searchBar.scopeButtonTitles![selectedScope])
     }
+    
 }
