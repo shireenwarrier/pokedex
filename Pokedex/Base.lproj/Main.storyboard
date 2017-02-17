@@ -21,6 +21,7 @@
                     <connections>
                         <segue destination="aan-s3-ozo" kind="relationship" relationship="viewControllers" id="jZi-S1-sRo"/>
                         <segue destination="SJt-KH-sIS" kind="relationship" relationship="viewControllers" id="ZZi-YT-3i4"/>
+                        <segue destination="KgE-Ju-TCI" kind="relationship" relationship="viewControllers" id="uhh-Bj-kev"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ra1-5O-CtD" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -45,6 +46,25 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1Ei-96-gf7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1174" y="1023"/>
+        </scene>
+        <!--Item-->
+        <scene sceneID="ekH-RK-Xmh">
+            <objects>
+                <viewController id="KgE-Ju-TCI" customClass="AdvancedSearchViewController" customModule="Pokedex" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="wdQ-gD-VKW"/>
+                        <viewControllerLayoutGuide type="bottom" id="zV6-pR-NPd"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="E1W-Gm-NfB">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Item" image="favorites_icon" id="o2k-Ck-RLy"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="OyF-aF-xeQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1149" y="1774"/>
         </scene>
         <!--Search View Controller-->
         <scene sceneID="y3l-M2-JlT">

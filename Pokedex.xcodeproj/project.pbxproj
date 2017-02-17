@@ -22,6 +22,8 @@
 		51237CCD1E5552DA006B5413 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51237CCC1E5552DA006B5413 /* ProfileViewController.swift */; };
 		51237CCF1E559398006B5413 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51237CCE1E559398006B5413 /* TabBarViewController.swift */; };
 		51237CD11E55C45B006B5413 /* FavoritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51237CD01E55C45B006B5413 /* FavoritesViewController.swift */; };
+		51237CD31E5690E3006B5413 /* AdvancedSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51237CD21E5690E3006B5413 /* AdvancedSearchViewController.swift */; };
+		51237CD51E569AC2006B5413 /* TypeTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51237CD41E569AC2006B5413 /* TypeTableCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,6 +65,8 @@
 		51237CCC1E5552DA006B5413 /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		51237CCE1E559398006B5413 /* TabBarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		51237CD01E55C45B006B5413 /* FavoritesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoritesViewController.swift; sourceTree = "<group>"; };
+		51237CD21E5690E3006B5413 /* AdvancedSearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvancedSearchViewController.swift; sourceTree = "<group>"; };
+		51237CD41E569AC2006B5413 /* TypeTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TypeTableCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,6 +121,8 @@
 				3CFC6F0E1D98716000B4EBB5 /* AppDelegate.swift */,
 				3CFC6F101D98716000B4EBB5 /* SearchViewController.swift */,
 				51237CCE1E559398006B5413 /* TabBarViewController.swift */,
+				51237CD21E5690E3006B5413 /* AdvancedSearchViewController.swift */,
+				51237CD41E569AC2006B5413 /* TypeTableCell.swift */,
 				51237CCC1E5552DA006B5413 /* ProfileViewController.swift */,
 				3CFC6F121D98716000B4EBB5 /* Main.storyboard */,
 				51237CD01E55C45B006B5413 /* FavoritesViewController.swift */,
@@ -288,6 +294,8 @@
 				51237CD11E55C45B006B5413 /* FavoritesViewController.swift in Sources */,
 				51237CC91E551DC0006B5413 /* PokemonTableCell.swift in Sources */,
 				3CFC6F111D98716000B4EBB5 /* SearchViewController.swift in Sources */,
+				51237CD31E5690E3006B5413 /* AdvancedSearchViewController.swift in Sources */,
+				51237CD51E569AC2006B5413 /* TypeTableCell.swift in Sources */,
 				3CFC6F411D9871FC00B4EBB5 /* PokemonGenerator.swift in Sources */,
 				3CFC6F0F1D98716000B4EBB5 /* AppDelegate.swift in Sources */,
 				51237CCD1E5552DA006B5413 /* ProfileViewController.swift in Sources */,

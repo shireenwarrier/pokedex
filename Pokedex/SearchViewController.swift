@@ -13,25 +13,45 @@ class SearchViewController: UIViewController {
     var collectionView: UICollectionView!
     let pokeArray: [Pokemon]! = PokemonGenerator.getPokemonArray()
     var searchController = UISearchController(searchResultsController: nil)
-    var filteredPokemon = [Pokemon]()
+    var filteredPokemon: [Pokemon] = []
     var pokemonToPass: Pokemon!
-    var i: Int!
+    var randomButton: UIBarButtonItem!
+    var randomBool: Bool = false
 
     override func viewDidLoad() {
-        i = 0
         super.viewDidLoad()
-        filteredPokemon = []
         setupTableView()
         setupCollectionView()
         setupSearchController()
+        setupNavBar()
         collectionView.isHidden = true
-        self.title = "Search!"
         // Do any additional setup after loading the view, typically from a nib.
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func setupNavBar() {
+        self.title = "Search!"
+        randomButton = UIBarButtonItem(title: "Surprise Me", style: UIBarButtonItemStyle.plain, target: self, action: #selector(SearchViewController.surpriseMe))
+        navigationItem.rightBarButtonItem = randomButton
+    }
+    
+    func surpriseMe() {
+        filteredPokemon = []
+        var j = Int(arc4random_uniform(UInt32(pokeArray.count)))
+        for _ in (0..<20) {
+            while containsMon(mon: pokeArray[j], arr: filteredPokemon) {
+                j = Int(arc4random_uniform(UInt32(pokeArray.count)))
+            }
+            filteredPokemon.append(pokeArray[j])
+        }
+        randomBool = true
+        tableView.reloadData()
+        collectionView.reloadData()
+        
     }
 
     func setupTableView(){
@@ -78,9 +98,13 @@ class SearchViewController: UIViewController {
         case "List":
             tableView.isHidden = false
             collectionView.isHidden = true
+            tableView.reloadData()
+
         case "Grid":
             tableView.isHidden = true
             collectionView.isHidden = false
+            
+            
         default:
             tableView.isHidden = false
         }
@@ -95,16 +119,19 @@ class SearchViewController: UIViewController {
     }
 
     func filterContentForSearchText(searchText: String, scope: String = "List") {
-        let byName = pokeArray.filter {
-            pokemon in return (pokemon.name.lowercased().range(of: searchText.lowercased()) != nil)
+        if !randomBool || (randomBool && searchText != "") {
+            let byName = pokeArray.filter {
+                pokemon in return (pokemon.name.lowercased().range(of: searchText.lowercased()) != nil)
+            }
+            let byNumber = pokeArray.filter {
+                pokemon in return (String(pokemon.number).range(of: searchText.lowercased()) != nil)
+            }
+            filteredPokemon = arrayUnion(array1: byName, array2: byNumber)
+            changeViews(scope: scope)
+            randomBool = false
+            tableView.reloadData()
         }
-        let byNumber = pokeArray.filter {
-            pokemon in return (String(pokemon.number).range(of: searchText.lowercased()) != nil)
-        }
-        filteredPokemon = arrayUnion(array1: byName, array2: byNumber)
         changeViews(scope: scope)
-        
-        tableView.reloadData()
     }
     
     func arrayUnion(array1: [Pokemon], array2: [Pokemon]) ->[Pokemon] {
@@ -150,8 +177,13 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate{
         let poke: Pokemon = filteredPokemon[indexPath.row]
         if let url = NSURL(string: poke.imageUrl) {
             if let data = NSData(contentsOf: url as URL) {
-                cell.pokeImage.contentMode = .scaleAspectFit
-                cell.pokeImage.image = UIImage(data: data as Data)
+                if poke.name.range(of: "Mega ") == nil {
+                    cell.pokeImage.contentMode = .scaleAspectFit
+                    cell.pokeImage.image = UIImage(data: data as Data)
+                } else {
+                    cell.pokeImage.contentMode = .scaleAspectFit
+                    cell.pokeImage.image = #imageLiteral(resourceName: "missing_pokemon")
+                }
             } else {
                 cell.pokeImage.contentMode = .scaleAspectFit
                 cell.pokeImage.image = #imageLiteral(resourceName: "missing_pokemon")
@@ -163,6 +195,8 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate{
         }
         cell.numberLabel.text = String(poke.number)
         cell.nameLabel.text = poke.name
+        cell.nameLabel.adjustsFontSizeToFitWidth = true
+        cell.numberLabel.adjustsFontSizeToFitWidth = true
         return cell
     }
     
@@ -195,7 +229,7 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
         let poke: Pokemon = filteredPokemon[indexPath.row]
         
         cell.nameLabel.text = poke.name
-        
+        cell.nameLabel.adjustsFontSizeToFitWidth = true
         return cell
     }
     
@@ -205,8 +239,13 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
         let pokeCell = cell as! PokemonGridCell
         if let url = NSURL(string: poke[indexPath.row].imageUrl) {
             if let data = NSData(contentsOf: url as URL) {
-                pokeCell.pokeImage.contentMode = .scaleAspectFit
-                pokeCell.pokeImage.image = UIImage(data: data as Data)
+                if poke[indexPath.row].name.range(of: "Mega ") == nil {
+                    pokeCell.pokeImage.contentMode = .scaleAspectFit
+                    pokeCell.pokeImage.image = UIImage(data: data as Data)
+                } else {
+                    pokeCell.pokeImage.contentMode = .scaleAspectFit
+                    pokeCell.pokeImage.image = #imageLiteral(resourceName: "missing_pokemon")
+                }
             } else {
                 pokeCell.pokeImage.contentMode = .scaleAspectFit
                 pokeCell.pokeImage.image = #imageLiteral(resourceName: "missing_pokemon")

@@ -9,10 +9,16 @@
 import UIKit
 
 class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
+    var favoritesArray: [Pokemon] = []
+    
+    struct defaultsKeys {
+        static let favoritesArray = "FavoritesArray"
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         delegate = self
+        storeValue()
         // Do any additional setup after loading the view.
     }
     
@@ -29,20 +35,25 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
     func setupTabBar(){
         let searchViewController = SearchViewController()
         let favoritesViewController = FavoritesViewController()
+        let advancedSearchViewController = AdvancedSearchViewController()
         
         let searchTabBar = UITabBarItem(title: "Search", image: UIImage(named: "search_icon"), selectedImage: UIImage(named: "search_icon"))
         let favoritesTabBar = UITabBarItem(title: "Favorites", image: UIImage(named: "favorites_icon"), selectedImage: UIImage(named: "favorites_icon"))
+        let advancedSearchTabBar = UITabBarItem(title: "Advanced Search", image: UIImage(named: "favorites_icon"), selectedImage: UIImage(named: "favorites_icon"))
         
         searchViewController.tabBarItem = searchTabBar
         favoritesViewController.tabBarItem = favoritesTabBar
+        advancedSearchViewController.tabBarItem = advancedSearchTabBar
         
-        self.viewControllers = [searchViewController, favoritesViewController]
+        self.viewControllers = [searchViewController, favoritesViewController, advancedSearchViewController]
     }
     
-    
-    //Delegate methods
-//    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
-//        print("hi")
-//    }
+    func storeValue() {
+        let defaults = UserDefaults.standard
+        
+        defaults.setValue(favoritesArray, forKey: TabBarViewController.defaultsKeys.favoritesArray)
+        
+        defaults.synchronize()
+    }
     
 }
