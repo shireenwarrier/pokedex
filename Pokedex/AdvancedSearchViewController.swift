@@ -216,14 +216,19 @@ extension AdvancedSearchViewController: UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if !containsType(type: typesArray[indexPath.row], arr: SearchViewController.typesArray) {
-            SearchViewController.typesArray.append(typesArray[indexPath.row])
-            typeTable.cellForRow(at: indexPath)?.accessoryType = .checkmark
-        }
+        SearchViewController.typesArray.append(typesArray[indexPath.row])
+        typeTable.cellForRow(at: indexPath)?.accessoryType = .checkmark
     }
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         typeTable.cellForRow(at: indexPath)?.accessoryType = .none
+        var i: Int = 0
+        for type in SearchViewController.typesArray {
+            if type == typesArray[indexPath.row] {
+                SearchViewController.typesArray.remove(at: i)
+            }
+            i += 1
+        }
     }
     
 }
