@@ -9,14 +9,19 @@
 import UIKit
 
 class SearchViewController: UIViewController {
-    var tableView: UITableView!
+    static var tableView: UITableView!
     var collectionView: UICollectionView!
-    let pokeArray: [Pokemon]! = PokemonGenerator.getPokemonArray()
+    static let pokeArray: [Pokemon]! = PokemonGenerator.getPokemonArray()
     var searchController = UISearchController(searchResultsController: nil)
-    var filteredPokemon: [Pokemon] = []
+    static var filteredPokemon: [Pokemon] = []
     var pokemonToPass: Pokemon!
     var randomButton: UIBarButtonItem!
     var randomBool: Bool = false
+    static var typesArray: [String]!
+    static var minHP: Int!
+    static var minDef: Int!
+    static var minAtt: Int!
+    static var favorites: [Pokemon]!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,6 +30,11 @@ class SearchViewController: UIViewController {
         setupSearchController()
         setupNavBar()
         collectionView.isHidden = true
+        SearchViewController.typesArray = []
+        SearchViewController.favorites = []
+        SearchViewController.minHP = 0
+        SearchViewController.minAtt = 0
+        SearchViewController.minDef = 0
         // Do any additional setup after loading the view, typically from a nib.
     }
 
@@ -37,38 +47,39 @@ class SearchViewController: UIViewController {
         self.title = "Search!"
         randomButton = UIBarButtonItem(title: "Surprise Me", style: UIBarButtonItemStyle.plain, target: self, action: #selector(SearchViewController.surpriseMe))
         navigationItem.rightBarButtonItem = randomButton
+        
     }
     
     func surpriseMe() {
-        filteredPokemon = []
-        var j = Int(arc4random_uniform(UInt32(pokeArray.count)))
+        SearchViewController.filteredPokemon = []
+        var j = Int(arc4random_uniform(UInt32(SearchViewController.pokeArray.count)))
         for _ in (0..<20) {
-            while containsMon(mon: pokeArray[j], arr: filteredPokemon) {
-                j = Int(arc4random_uniform(UInt32(pokeArray.count)))
+            while containsMon(mon: SearchViewController.pokeArray[j], arr: SearchViewController.filteredPokemon) {
+                j = Int(arc4random_uniform(UInt32(SearchViewController.pokeArray.count)))
             }
-            filteredPokemon.append(pokeArray[j])
+            SearchViewController.filteredPokemon.append(SearchViewController.pokeArray[j])
         }
         randomBool = true
-        tableView.reloadData()
+        SearchViewController.tableView.reloadData()
         collectionView.reloadData()
         
     }
 
     func setupTableView(){
         //Initialize TableView Object here
-        tableView = UITableView(frame: CGRect(x: 0, y: UIApplication.shared.statusBarFrame.maxY, width: view.frame.width, height: view.frame.height))
+        SearchViewController.tableView = UITableView(frame: CGRect(x: 0, y: UIApplication.shared.statusBarFrame.maxY, width: view.frame.width, height: view.frame.height))
         
         //Register the tableViewCell you are using
-        tableView.register(PokemonCell.self, forCellReuseIdentifier: "pokeCell")
+        SearchViewController.tableView.register(PokemonCell.self, forCellReuseIdentifier: "pokeCell")
         
         //Set properties of TableView
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.rowHeight = 50
-        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 50/2, right: 0)
+        SearchViewController.tableView.delegate = self
+        SearchViewController.tableView.dataSource = self
+        SearchViewController.tableView.rowHeight = 50
+        SearchViewController.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 50/2, right: 0)
         
         //Add tableView to view
-        view.addSubview(tableView)
+        view.addSubview(SearchViewController.tableView)
     }
     
     func setupCollectionView(){
@@ -88,7 +99,7 @@ class SearchViewController: UIViewController {
         searchController.searchResultsUpdater = self
         searchController.dimsBackgroundDuringPresentation = false
         definesPresentationContext = true
-        tableView.tableHeaderView = searchController.searchBar
+        SearchViewController.tableView.tableHeaderView = searchController.searchBar
         searchController.searchBar.scopeButtonTitles = ["List", "Grid"]
         searchController.searchBar.delegate = self
     }
@@ -96,16 +107,16 @@ class SearchViewController: UIViewController {
     func changeViews(scope: String){
         switch scope {
         case "List":
-            tableView.isHidden = false
+            SearchViewController.tableView.isHidden = false
             collectionView.isHidden = true
-            tableView.reloadData()
+            SearchViewController.tableView.reloadData()
 
         case "Grid":
-            tableView.isHidden = true
+            SearchViewController.tableView.isHidden = true
             collectionView.isHidden = false
             
         default:
-            tableView.isHidden = false
+            SearchViewController.tableView.isHidden = false
         }
     }
 
@@ -119,16 +130,16 @@ class SearchViewController: UIViewController {
 
     func filterContentForSearchText(searchText: String, scope: String = "List") {
         if !randomBool || (randomBool && searchText != "") {
-            let byName = pokeArray.filter {
+            let byName = SearchViewController.pokeArray.filter {
                 pokemon in return (pokemon.name.lowercased().range(of: searchText.lowercased()) != nil)
             }
-            let byNumber = pokeArray.filter {
+            let byNumber = SearchViewController.pokeArray.filter {
                 pokemon in return (String(pokemon.number).range(of: searchText.lowercased()) != nil)
             }
-            filteredPokemon = arrayUnion(array1: byName, array2: byNumber)
+            SearchViewController.filteredPokemon = arrayUnion(array1: byName, array2: byNumber)
             changeViews(scope: scope)
             randomBool = false
-            tableView.reloadData()
+            SearchViewController.tableView.reloadData()
         }
         changeViews(scope: scope)
     }
@@ -162,7 +173,7 @@ class SearchViewController: UIViewController {
 extension SearchViewController: UITableViewDataSource, UITableViewDelegate{
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return filteredPokemon.count
+        return SearchViewController.filteredPokemon.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -173,7 +184,7 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate{
         }
         
         cell.awakeFromNib()
-        let poke: Pokemon = filteredPokemon[indexPath.row]
+        let poke: Pokemon = SearchViewController.filteredPokemon[indexPath.row]
         if let url = NSURL(string: poke.imageUrl) {
             if let data = NSData(contentsOf: url as URL) {
                 if poke.name.range(of: "Mega ") == nil {
@@ -200,7 +211,7 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate{
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        pokemonToPass = filteredPokemon[indexPath.row]
+        pokemonToPass = SearchViewController.filteredPokemon[indexPath.row]
         performSegue(withIdentifier: "segueToProfile", sender: self)
     }
     
@@ -213,7 +224,7 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return filteredPokemon.count
+        return SearchViewController.filteredPokemon.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -225,7 +236,7 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
         
         cell.awakeFromNib()
         
-        let poke: Pokemon = filteredPokemon[indexPath.row]
+        let poke: Pokemon = SearchViewController.filteredPokemon[indexPath.row]
         
         cell.nameLabel.text = poke.name
         cell.nameLabel.adjustsFontSizeToFitWidth = true
@@ -233,7 +244,7 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        var poke: [Pokemon] = filteredPokemon
+        var poke: [Pokemon] = SearchViewController.filteredPokemon
         
         let pokeCell = cell as! PokemonGridCell
         if let url = NSURL(string: poke[indexPath.row].imageUrl) {
@@ -261,7 +272,7 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        pokemonToPass = filteredPokemon[indexPath.row]
+        pokemonToPass = SearchViewController.filteredPokemon[indexPath.row]
         performSegue(withIdentifier: "segueToProfile", sender: self)
     }
     

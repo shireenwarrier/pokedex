@@ -9,10 +9,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Tab Bar Controller-->
+        <!--Tab Bar View Controller-->
         <scene sceneID="dQz-4C-tbD">
             <objects>
-                <tabBarController id="fFC-rg-vQB" sceneMemberID="viewController">
+                <tabBarController id="fFC-rg-vQB" customClass="TabBarViewController" customModule="Pokedex" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBar key="tabBar" contentMode="scaleToFill" id="M5G-Tq-zWy">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -28,10 +28,10 @@
             </objects>
             <point key="canvasLocation" x="-2490" y="576"/>
         </scene>
-        <!--Favorites-->
+        <!--Advanced Search-->
         <scene sceneID="9m5-vE-fiX">
             <objects>
-                <viewController id="SJt-KH-sIS" customClass="FavoritesViewController" customModule="Pokedex" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="SJt-KH-sIS" customClass="AdvancedSearchViewController" customModule="Pokedex" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="9HK-dM-f2o"/>
                         <viewControllerLayoutGuide type="bottom" id="UAx-u6-yKF"/>
@@ -41,16 +41,16 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Favorites" image="favorites_icon" id="wTf-Ip-rKf"/>
+                    <tabBarItem key="tabBarItem" title="Advanced Search" image="poke_yo_ball" id="wTf-Ip-rKf"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1Ei-96-gf7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1174" y="1023"/>
         </scene>
-        <!--Item-->
+        <!--Favorites-->
         <scene sceneID="ekH-RK-Xmh">
             <objects>
-                <viewController id="KgE-Ju-TCI" customClass="AdvancedSearchViewController" customModule="Pokedex" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="KgE-Ju-TCI" customClass="FavoritesViewController" customModule="Pokedex" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="wdQ-gD-VKW"/>
                         <viewControllerLayoutGuide type="bottom" id="zV6-pR-NPd"/>
@@ -60,10 +60,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Item" image="favorites_icon" id="o2k-Ck-RLy"/>
-                    <connections>
-                        <segue destination="fFC-rg-vQB" kind="show" identifier="segueToSearch" id="rKg-2o-Rm8"/>
-                    </connections>
+                    <tabBarItem key="tabBarItem" title="Favorites" image="red_heart" id="o2k-Ck-RLy"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OyF-aF-xeQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -130,7 +127,8 @@
         </scene>
     </scenes>
     <resources>
-        <image name="favorites_icon" width="32" height="32"/>
+        <image name="poke_yo_ball" width="32" height="32"/>
+        <image name="red_heart" width="32" height="32"/>
         <image name="search_icon" width="32" height="32"/>
     </resources>
 </document>

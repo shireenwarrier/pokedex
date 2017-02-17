@@ -130,12 +130,12 @@ class ProfileViewController: UIViewController, UIWebViewDelegate {
         BSTTotalLabel.textColor = UIColor.black
         BSTTotalLabel.adjustsFontSizeToFitWidth = true
         
-        webViewButton = UIButton(frame: CGRect(x: 0, y: BSTTotalLabel.frame.maxY, width: 150, height: 100))
+        webViewButton = UIButton(frame: CGRect(x: 0, y: BSTTotalLabel.frame.maxY, width: 150, height: 50))
         webViewButton.setTitle("Search on the Web", for: .normal)
         webViewButton.setTitleColor(UIColor.black, for: .normal)
         webViewButton.addTarget(self, action:#selector(setupWebView), for: .touchUpInside)
         
-        favoritesButton = UIButton(frame: CGRect(x: 200, y: BSTTotalLabel.frame.maxY, width: 150, height: 100))
+        favoritesButton = UIButton(frame: CGRect(x: 200, y: BSTTotalLabel.frame.maxY, width: 150, height: 50))
         favoritesButton.setTitle("Add to Favorites", for: .normal)
         favoritesButton.setTitleColor(UIColor.black, for: .normal)
         favoritesButton.addTarget(self, action:#selector(addToFavorites), for: .touchUpInside)
@@ -169,20 +169,21 @@ class ProfileViewController: UIViewController, UIWebViewDelegate {
     }
     
     func addToFavorites() {
-        print("hi")
         storeValue(pokemon: pokemon)
+        if FavoritesViewController.tableView != nil {
+            FavoritesViewController.tableView.reloadData()
+        }
     }
     
     func storeValue(pokemon: Pokemon) {
         let defaults = UserDefaults.standard
         
-        let favorite = defaults.object(forKey: TabBarViewController.defaultsKeys.favoritesArray)
-
-        defaults.setValue(favorite, forKey: TabBarViewController.defaultsKeys.favoritesArray)
-
-        
+        //var favorite: [Pokemon] = defaults.object(forKey: TabBarViewController.defaultsKeys.favoritesArray) as! [Pokemon]
+        TabBarViewController.favoritesArray.append(pokemon)
+        SearchViewController.favorites.append(pokemon)
+        //favorite.append(pokemon)
+        //print(TabBarViewController.favoritesArray.count)
         defaults.synchronize()
     }
-    
     
 }

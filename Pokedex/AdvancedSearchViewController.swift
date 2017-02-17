@@ -11,7 +11,6 @@ import UIKit
 class AdvancedSearchViewController: UIViewController {
     
     let typesArray: [String] = ["Water", "Fire", "Grass", "Bug", "Electric", "Ice", "Steel", "Rock", "Fighting", "Ghost", "Psychic", "Dark", "Fairy", "Flying", "Normal", "Poison", "Ground", "Dragon"]
-    var savedTypes: [String] = []
     var typesUsed: Bool = false
     var typeTableLabel: UILabel!
     var minDefenseLabel: UILabel!
@@ -89,7 +88,6 @@ class AdvancedSearchViewController: UIViewController {
         applyButton.setTitleColor(UIColor.black, for: .normal)
         applyButton.addTarget(self, action:#selector(applyFilter), for: .touchUpInside)
 
-        
         //Add tableView to view
         view.addSubview(typeTableLabel)
         view.addSubview(typeTable)
@@ -100,12 +98,50 @@ class AdvancedSearchViewController: UIViewController {
         view.addSubview(minHealthLabel)
         view.addSubview(minHealthField)
         view.addSubview(applyButton)
-
     }
     
     func applyFilter() {
-        performSegue(withIdentifier: "segueToSearch", sender: self)
-        print("filter")
+        var temp = ""
+        if minDefenseField.text != nil{
+            temp = minDefenseField.text!
+            SearchViewController.minDef = Int(temp) ?? 0
+        }
+        if minHealthField.text != nil{
+            temp = minHealthField.text!
+            SearchViewController.minHP = Int(temp) ?? 0
+        }
+        if minAttackField.text != nil{
+            temp = minAttackField.text!
+            SearchViewController.minAtt = Int(temp) ?? 0
+        }
+        SearchViewController.filteredPokemon = intersect(array1: typeFilter(), array2: minFilter())
+        SearchViewController.tableView.reloadData()
+    }
+    
+    func typeFilter()->[Pokemon] {
+        var filtered: [Pokemon] = []
+        for poke in SearchViewController.pokeArray {
+            if poke.types.count == 2{
+                if containsType(type: poke.types[1], arr: SearchViewController.typesArray) {
+                    filtered.append(poke)
+                }
+            } else{
+                if containsType(type: poke.types[0], arr: SearchViewController.typesArray) {
+                    filtered.append(poke)
+                }
+            }
+        }
+        return filtered
+    }
+    
+    func minFilter()->[Pokemon]{
+        var filtered: [Pokemon] = []
+        for poke in SearchViewController.pokeArray {
+            if poke.health >= SearchViewController.minHP && poke.attack >= SearchViewController.minAtt && poke.defense >= SearchViewController.minDef{
+                filtered.append(poke)
+            }
+        }
+        return filtered
     }
     
     func containsType(type: String, arr: [String]) ->Bool {
@@ -116,13 +152,24 @@ class AdvancedSearchViewController: UIViewController {
         }
         return false
     }
-
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        if segue.identifier == "segueToSearch" {
-//            let profileVC = segue.destination as! SearchViewController
-//            profileVC.pokemon = pokemonToPass
-//        }
-//    }
+    func intersect(array1: [Pokemon], array2: [Pokemon]) ->[Pokemon] {
+        var intersection: [Pokemon] = []
+        for poke in array1{
+            if containsMon(mon: poke, arr: array2) {
+                intersection.append(poke)
+            }
+        }
+        return intersection
+    }
+    func containsMon(mon: Pokemon, arr: [Pokemon]) ->Bool {
+        let name = mon.name
+        for poke in arr {
+            if name == poke.name {
+                return true
+            }
+        }
+        return false
+    }
 }
 
 extension AdvancedSearchViewController: UITableViewDelegate, UITableViewDataSource {
@@ -145,8 +192,8 @@ extension AdvancedSearchViewController: UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if !containsType(type: typesArray[indexPath.row], arr: savedTypes) {
-            savedTypes.append(typesArray[indexPath.row])
+        if !containsType(type: typesArray[indexPath.row], arr: SearchViewController.typesArray) {
+            SearchViewController.typesArray.append(typesArray[indexPath.row])
             typeTable.cellForRow(at: indexPath)?.accessoryType = .checkmark
         }
     }
