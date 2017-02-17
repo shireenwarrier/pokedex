@@ -21,6 +21,7 @@ class AdvancedSearchViewController: UIViewController {
     var minAttackField: UITextField!
     var minHealthField: UITextField!
     var typeTable: UITableView!
+    var applyButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -83,6 +84,12 @@ class AdvancedSearchViewController: UIViewController {
         minHealthField.textColor = UIColor.black
         minHealthField.adjustsFontSizeToFitWidth = true
         
+        applyButton = UIButton(frame: CGRect(x: view.frame.width / 10, y: minHealthField.frame.maxY + 20, width: view.frame.width * (4/5), height: 30))
+        applyButton.setTitle("Apply", for: .normal)
+        applyButton.setTitleColor(UIColor.black, for: .normal)
+        applyButton.addTarget(self, action:#selector(applyFilter), for: .touchUpInside)
+
+        
         //Add tableView to view
         view.addSubview(typeTableLabel)
         view.addSubview(typeTable)
@@ -92,6 +99,13 @@ class AdvancedSearchViewController: UIViewController {
         view.addSubview(minAttackField)
         view.addSubview(minHealthLabel)
         view.addSubview(minHealthField)
+        view.addSubview(applyButton)
+
+    }
+    
+    func applyFilter() {
+        performSegue(withIdentifier: "segueToSearch", sender: self)
+        print("filter")
     }
     
     func containsType(type: String, arr: [String]) ->Bool {
@@ -103,6 +117,12 @@ class AdvancedSearchViewController: UIViewController {
         return false
     }
 
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        if segue.identifier == "segueToSearch" {
+//            let profileVC = segue.destination as! SearchViewController
+//            profileVC.pokemon = pokemonToPass
+//        }
+//    }
 }
 
 extension AdvancedSearchViewController: UITableViewDelegate, UITableViewDataSource {

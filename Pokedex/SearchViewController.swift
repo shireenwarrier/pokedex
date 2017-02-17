@@ -104,7 +104,6 @@ class SearchViewController: UIViewController {
             tableView.isHidden = true
             collectionView.isHidden = false
             
-            
         default:
             tableView.isHidden = false
         }
