@@ -11,7 +11,6 @@ import UIKit
 class AdvancedSearchViewController: UIViewController {
     
     let typesArray: [String] = ["Water", "Fire", "Grass", "Bug", "Electric", "Ice", "Steel", "Rock", "Fighting", "Ghost", "Psychic", "Dark", "Fairy", "Flying", "Normal", "Poison", "Ground", "Dragon"]
-    var typesUsed: Bool = false
     var typeTableLabel: UILabel!
     var minDefenseLabel: UILabel!
     var minAttackLabel: UILabel!
@@ -24,10 +23,11 @@ class AdvancedSearchViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = UIColor(red: 0.878, green: 0.890, blue: 0.890, alpha: 1.0)
         setupUI()
         // Do any additional setup after loading the view.
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -38,7 +38,10 @@ class AdvancedSearchViewController: UIViewController {
         typeTableLabel.text = "Select all types by which to filter"
         typeTableLabel.adjustsFontForContentSizeCategory = true
         typeTableLabel.textColor = UIColor.black
+        typeTableLabel.backgroundColor = UIColor(red: 0.717, green: 0.886, blue: 1.0, alpha: 1.0)
+        typeTableLabel.layer.cornerRadius = 6
         typeTableLabel.adjustsFontSizeToFitWidth = true
+        typeTableLabel.layer.masksToBounds = true
         
         //Initialize TableView Object here
         typeTable = UITableView(frame: CGRect(x: view.frame.width / 10, y: typeTableLabel.frame.maxY + 10, width: view.frame.width * (4/5), height: view.frame.height/3))
@@ -54,40 +57,59 @@ class AdvancedSearchViewController: UIViewController {
         typeTable.allowsMultipleSelection = true
         
         minDefenseLabel = UILabel(frame: CGRect(x: view.frame.width / 10, y: typeTable.frame.maxY + 20, width: view.frame.width * (2/5), height: 20))
-        minDefenseLabel.text = "Enter min Defense:"
+        minDefenseLabel.text = "Enter Min. Defense"
         minDefenseLabel.adjustsFontForContentSizeCategory = true
         minDefenseLabel.textColor = UIColor.black
         minDefenseLabel.adjustsFontSizeToFitWidth = true
+        minDefenseLabel.backgroundColor = UIColor(red: 0.717, green: 0.886, blue: 1.0, alpha: 1.0)
+        minDefenseLabel.layer.cornerRadius = 6
+        minDefenseLabel.layer.masksToBounds = true
         
         minDefenseField = UITextField(frame: CGRect(x: view.frame.width * (1/2), y: typeTable.frame.maxY + 20, width: view.frame.width * (2/5), height: 20))
         minDefenseField.textColor = UIColor.black
         minDefenseField.adjustsFontSizeToFitWidth = true
+        minDefenseField.backgroundColor = UIColor.white
+        minDefenseField.layer.cornerRadius = 6
+        minDefenseField.layer.masksToBounds = true
         
         minAttackLabel = UILabel(frame: CGRect(x: view.frame.width / 10, y: minDefenseField.frame.maxY + 20, width: view.frame.width * (2/5), height: 20))
-        minAttackLabel.text = "Enter min Attack:"
+        minAttackLabel.text = "Enter Min. Attack"
         minAttackLabel.adjustsFontForContentSizeCategory = true
         minAttackLabel.textColor = UIColor.black
         minAttackLabel.adjustsFontSizeToFitWidth = true
+        minAttackLabel.backgroundColor = UIColor(red: 0.717, green: 0.886, blue: 1.0, alpha: 1.0)
+        minAttackLabel.layer.cornerRadius = 6
+        minAttackLabel.layer.masksToBounds = true
         
         minAttackField = UITextField(frame: CGRect(x: view.frame.width * (1/2), y: minDefenseField.frame.maxY + 20, width: view.frame.width * (2/5), height: 20))
         minAttackField.textColor = UIColor.black
         minAttackField.adjustsFontSizeToFitWidth = true
+        minAttackField.backgroundColor = UIColor.white
+        minAttackField.layer.cornerRadius = 6
+        minAttackField.layer.masksToBounds = true
         
         minHealthLabel = UILabel(frame: CGRect(x: view.frame.width / 10, y: minAttackField.frame.maxY + 20, width: view.frame.width * (2/5), height: 20))
-        minHealthLabel.text = "Enter min Health:"
+        minHealthLabel.text = "Enter Min. Health"
         minHealthLabel.adjustsFontForContentSizeCategory = true
         minHealthLabel.textColor = UIColor.black
         minHealthLabel.adjustsFontSizeToFitWidth = true
+        minHealthLabel.backgroundColor = UIColor(red: 0.717, green: 0.886, blue: 1.0, alpha: 1.0)
+        minHealthLabel.layer.cornerRadius = 6
+        minHealthLabel.layer.masksToBounds = true
         
         minHealthField = UITextField(frame: CGRect(x: view.frame.width * (1/2), y: minAttackField.frame.maxY + 20, width: view.frame.width * (2/5), height: 20))
         minHealthField.textColor = UIColor.black
         minHealthField.adjustsFontSizeToFitWidth = true
+        minHealthField.backgroundColor = UIColor.white
+        minHealthField.layer.cornerRadius = 6
+        minHealthField.layer.masksToBounds = true
         
         applyButton = UIButton(frame: CGRect(x: view.frame.width / 10, y: minHealthField.frame.maxY + 20, width: view.frame.width * (4/5), height: 30))
-        applyButton.setTitle("Apply", for: .normal)
+        applyButton.setTitle("Apply Filters", for: .normal)
         applyButton.setTitleColor(UIColor.black, for: .normal)
         applyButton.addTarget(self, action:#selector(applyFilter), for: .touchUpInside)
-
+        applyButton.backgroundColor = UIColor(red: 0.094, green: 0.337, blue: 0.788, alpha: 1.0)
+        
         //Add tableView to view
         view.addSubview(typeTableLabel)
         view.addSubview(typeTable)
@@ -152,6 +174,7 @@ class AdvancedSearchViewController: UIViewController {
         }
         return false
     }
+    
     func intersect(array1: [Pokemon], array2: [Pokemon]) ->[Pokemon] {
         var intersection: [Pokemon] = []
         for poke in array1{
@@ -161,6 +184,7 @@ class AdvancedSearchViewController: UIViewController {
         }
         return intersection
     }
+    
     func containsMon(mon: Pokemon, arr: [Pokemon]) ->Bool {
         let name = mon.name
         for poke in arr {
@@ -201,5 +225,5 @@ extension AdvancedSearchViewController: UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         typeTable.cellForRow(at: indexPath)?.accessoryType = .none
     }
-
+    
 }

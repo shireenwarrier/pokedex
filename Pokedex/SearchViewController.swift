@@ -22,7 +22,7 @@ class SearchViewController: UIViewController {
     static var minDef: Int!
     static var minAtt: Int!
     static var favorites: [Pokemon]!
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTableView()
@@ -35,9 +35,10 @@ class SearchViewController: UIViewController {
         SearchViewController.minHP = 0
         SearchViewController.minAtt = 0
         SearchViewController.minDef = 0
+        view.backgroundColor = UIColor(red: 0.878, green: 0.890, blue: 0.890, alpha: 1.0)
         // Do any additional setup after loading the view, typically from a nib.
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -64,7 +65,7 @@ class SearchViewController: UIViewController {
         collectionView.reloadData()
         
     }
-
+    
     func setupTableView(){
         //Initialize TableView Object here
         SearchViewController.tableView = UITableView(frame: CGRect(x: 0, y: UIApplication.shared.statusBarFrame.maxY, width: view.frame.width, height: view.frame.height))
@@ -110,16 +111,18 @@ class SearchViewController: UIViewController {
             SearchViewController.tableView.isHidden = false
             collectionView.isHidden = true
             SearchViewController.tableView.reloadData()
-
+            searchController.searchBar.showsCancelButton = true
+            
         case "Grid":
             SearchViewController.tableView.isHidden = true
             collectionView.isHidden = false
+            searchController.searchBar.showsCancelButton = false
             
         default:
             SearchViewController.tableView.isHidden = false
         }
     }
-
+    
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "segueToProfile" {
@@ -127,7 +130,7 @@ class SearchViewController: UIViewController {
             profileVC.pokemon = pokemonToPass
         }
     }
-
+    
     func filterContentForSearchText(searchText: String, scope: String = "List") {
         if !randomBool || (randomBool && searchText != "") {
             let byName = SearchViewController.pokeArray.filter {
@@ -182,7 +185,6 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate{
         for subview in cell.contentView.subviews {
             subview.removeFromSuperview()
         }
-        
         cell.awakeFromNib()
         let poke: Pokemon = SearchViewController.filteredPokemon[indexPath.row]
         if let url = NSURL(string: poke.imageUrl) {
@@ -198,8 +200,7 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate{
                 cell.pokeImage.contentMode = .scaleAspectFit
                 cell.pokeImage.image = #imageLiteral(resourceName: "missing_pokemon")
             }
-        }
-        else {
+        } else {
             cell.pokeImage.contentMode = .scaleAspectFit
             cell.pokeImage.image = #imageLiteral(resourceName: "missing_pokemon")
         }
@@ -218,7 +219,6 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate{
 }
 
 extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
-    
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }

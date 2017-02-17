@@ -28,6 +28,7 @@ class ProfileViewController: UIViewController, UIWebViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        view.backgroundColor = UIColor(red: 0.878, green: 0.890, blue: 0.890, alpha: 1.0)
         // Do any additional setup after loading the view.
     }
     
@@ -55,6 +56,7 @@ class ProfileViewController: UIViewController, UIWebViewDelegate {
             pokeImage.contentMode = .scaleAspectFit
             pokeImage.image = #imageLiteral(resourceName: "missing_pokemon")
         }
+        
         
         typeLabel = UILabel(frame: CGRect(x: view.frame.width/10 , y: pokeImage.frame.maxY, width: view.frame.width * (3/5), height: 20))
         var types = "Type: " + pokemon.types[0]
@@ -176,14 +178,7 @@ class ProfileViewController: UIViewController, UIWebViewDelegate {
     }
     
     func storeValue(pokemon: Pokemon) {
-        let defaults = UserDefaults.standard
-        
-        //var favorite: [Pokemon] = defaults.object(forKey: TabBarViewController.defaultsKeys.favoritesArray) as! [Pokemon]
-        TabBarViewController.favoritesArray.append(pokemon)
         SearchViewController.favorites.append(pokemon)
-        //favorite.append(pokemon)
-        //print(TabBarViewController.favoritesArray.count)
-        defaults.synchronize()
     }
     
 }

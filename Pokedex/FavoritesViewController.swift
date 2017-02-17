@@ -10,13 +10,14 @@ import UIKit
 
 class FavoritesViewController: UIViewController {
     static var tableView: UITableView!
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTableView()
+        view.backgroundColor = UIColor(red: 0.878, green: 0.890, blue: 0.890, alpha: 1.0)
         // Do any additional setup after loading the view.
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -37,16 +38,14 @@ class FavoritesViewController: UIViewController {
         
         //Add tableView to view
         view.addSubview(FavoritesViewController.tableView)
-        FavoritesViewController.tableView.reloadData()
     }
-
-
+    
+    
 }
 
 extension FavoritesViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print(SearchViewController.favorites.count)
         return SearchViewController.favorites.count
     }
     
