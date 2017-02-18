@@ -106,9 +106,13 @@ class AdvancedSearchViewController: UIViewController {
         
         applyButton = UIButton(frame: CGRect(x: view.frame.width / 10, y: minHealthField.frame.maxY + 20, width: view.frame.width * (4/5), height: 30))
         applyButton.setTitle("Apply Filters", for: .normal)
-        applyButton.setTitleColor(UIColor.black, for: .normal)
+        applyButton.setTitleColor(UIColor.white, for: .normal)
         applyButton.addTarget(self, action:#selector(applyFilter), for: .touchUpInside)
         applyButton.backgroundColor = UIColor(red: 0.094, green: 0.337, blue: 0.788, alpha: 1.0)
+        
+        minDefenseField.delegate = self
+        minAttackField.delegate = self
+        minHealthField.delegate = self
         
         //Add tableView to view
         view.addSubview(typeTableLabel)
@@ -123,6 +127,16 @@ class AdvancedSearchViewController: UIViewController {
     }
     
     func applyFilter() {
+        UIView.animate(withDuration: 0.3,
+                       animations: {
+                        self.applyButton.transform = CGAffineTransform(scaleX: 0.3, y: 0.3)
+        },
+                       completion: { _ in
+                        UIView.animate(withDuration: 0.3) {
+                            self.applyButton.transform = CGAffineTransform.identity
+                        }
+        })
+        
         var temp = ""
         if minDefenseField.text != nil{
             temp = minDefenseField.text!
@@ -231,4 +245,19 @@ extension AdvancedSearchViewController: UITableViewDelegate, UITableViewDataSour
         }
     }
     
+}
+
+extension AdvancedSearchViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool
+    {
+        // Try to find next responder
+        if let nextField = textField.superview?.viewWithTag(textField.tag + 1) as? UITextField {
+            nextField.becomeFirstResponder()
+        } else {
+            // Not found, so remove keyboard.
+            textField.resignFirstResponder()
+        }
+        // Do not add a line break
+        return false
+    }
 }

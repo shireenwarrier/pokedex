@@ -45,7 +45,7 @@ class SearchViewController: UIViewController {
     }
     
     func setupNavBar() {
-        self.title = "Search!"
+        self.title = "PokéDex"
         randomButton = UIBarButtonItem(title: "Surprise Me", style: UIBarButtonItemStyle.plain, target: self, action: #selector(SearchViewController.surpriseMe))
         navigationItem.rightBarButtonItem = randomButton
         
@@ -77,7 +77,7 @@ class SearchViewController: UIViewController {
         SearchViewController.tableView.delegate = self
         SearchViewController.tableView.dataSource = self
         SearchViewController.tableView.rowHeight = 50
-        SearchViewController.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 50/2, right: 0)
+        SearchViewController.tableView.contentInset = UIEdgeInsets(top: -20, left: 0, bottom: 50/2, right: 0)
         
         //Add tableView to view
         view.addSubview(SearchViewController.tableView)
