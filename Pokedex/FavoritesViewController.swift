@@ -78,8 +78,6 @@ extension FavoritesViewController: UITableViewDataSource, UITableViewDelegate {
         }
         cell.numberLabel.text = String(poke.number)
         cell.nameLabel.text = poke.name
-        cell.nameLabel.adjustsFontSizeToFitWidth = true
-        cell.numberLabel.adjustsFontSizeToFitWidth = true
         
         return cell
     }

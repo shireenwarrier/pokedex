@@ -103,6 +103,8 @@ class SearchViewController: UIViewController {
         SearchViewController.tableView.tableHeaderView = searchController.searchBar
         searchController.searchBar.scopeButtonTitles = ["List", "Grid"]
         searchController.searchBar.delegate = self
+        searchController.searchBar.barTintColor = UIColor(red: 201/255, green: 55/255, blue: 55/255, alpha: 1.0)
+        searchController.searchBar.tintColor = UIColor.white
     }
     
     func changeViews(scope: String){
@@ -206,8 +208,7 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate{
         }
         cell.numberLabel.text = String(poke.number)
         cell.nameLabel.text = poke.name
-        cell.nameLabel.adjustsFontSizeToFitWidth = true
-        cell.numberLabel.adjustsFontSizeToFitWidth = true
+
         return cell
     }
     

@@ -19,12 +19,16 @@ class PokemonCell: UITableViewCell {
         
         //Our Name Label
         pokeImage = UIImageView(frame: CGRect(x: 20, y: contentView.frame.height * (1/4), width: contentView.frame.height * (3/4), height: contentView.frame.height * (3/4)))
+        pokeImage.layer.cornerRadius = pokeImage.frame.size.width/2;
+        pokeImage.clipsToBounds = true;
         
         numberLabel = UILabel(frame: CGRect(x: pokeImage.frame.maxX + 15, y: contentView.frame.height * (1/3), width: 40, height: contentView.frame.height * (2/3)))
         numberLabel.textColor = UIColor.black
+        numberLabel.adjustsFontSizeToFitWidth = true
         
         nameLabel = UILabel(frame: CGRect(x: numberLabel.frame.maxX + 10, y: contentView.frame.height * (1/3), width: 250, height: contentView.frame.height * (2/3)))
         nameLabel.textColor = UIColor.black
+        nameLabel.adjustsFontSizeToFitWidth = true
         
         contentView.addSubview(nameLabel)
         contentView.addSubview(numberLabel)
