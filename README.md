@@ -1,7 +1,4 @@
-# sp17proj2ios
+# pokedex
 
-Repository for Spring 2017 MDB iOS Training Program Mini-Project 2 Submissions
+Pokedex allows users to search for Pokemon by name or number and view search results in either a list or grid view. You can do an advanced search and filter results that way, as well. Users can click on individual Pokemon to go to their profile and see individual stats. You can also add Pokemon to the "My Favorites" page. 
 
-Finalized mini-projects should be stored in personal portfolios, but this repository will be used for providing feedback on code quality using the GitHub code review features.
-
-When pushing code to this repo, DO NOT push to master. Create a new branch and open a pull request.
